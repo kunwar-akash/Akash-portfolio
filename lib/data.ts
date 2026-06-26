@@ -6,7 +6,7 @@ export const personalInfo = {
   phone: "+91 8091843346",
   location: "Chandigarh, India",
   linkedin: "https://linkedin.com/in/akashkunwaronline",
-  github: "https://github.com/akashkunwar", // Update with your actual GitHub
+  github: "https://github.com/kunwar-akash", // Update with your actual GitHub
   summary:
     "Software Development Engineer with 2+ years of experience in production support, incident management, and enterprise application validation in a product-based environment. Skilled in Linux-based troubleshooting, SQL validation, REST API analysis, and root cause analysis for customer-facing applications. Track record of owning weekly production releases, driving ~40% defect reduction, and collaborating with cross-functional stakeholders across engineering, product, and business teams.",
   summaryPoints: [
