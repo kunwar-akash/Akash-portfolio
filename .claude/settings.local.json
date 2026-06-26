@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Recurse \"c:\\\\Users\\\\dml-akash\\\\OneDrive\\\\Desktop\\\\Earthkink WEB repos\\\\akash-portfolio\" -File | Where-Object { $_.Extension -in \".tsx\",\".ts\",\".json\",\".css\",\".mjs\",\".md\" } | ForEach-Object { $_.FullName.Replace\\(\"c:\\\\Users\\\\dml-akash\\\\OneDrive\\\\Desktop\\\\Earthkink WEB repos\\\\akash-portfolio\\\\\",\"\"\\) } | Sort-Object)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(Remove-Item -Recurse -Force \"c:/Users/dml-akash/OneDrive/Desktop/Earthkink WEB repos/akash-portfolio/.next\" -ErrorAction SilentlyContinue)"
+    ]
+  }
+}
