@@ -2,7 +2,17 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Linkedin, Github, Send, CheckCircle2 } from "lucide-react";
+import emailjs from "@emailjs/browser";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Linkedin,
+  Github,
+  Send,
+  CheckCircle2,
+  type LucideIcon,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { SectionHeader } from "@/components/section-header";
 import { Button } from "@/components/ui/button";
@@ -10,7 +20,23 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { personalInfo } from "@/lib/data";
 
-const contactMethods = [
+interface ContactMethod {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  href: string | null;
+  desc: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  number: string;
+  subject: string;
+  message: string;
+}
+
+const contactMethods: ContactMethod[] = [
   {
     icon: Mail,
     label: "Email",
@@ -42,9 +68,10 @@ const contactMethods = [
 ];
 
 export function ContactClient() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     email: "",
+    number: "",
     subject: "",
     message: "",
   });
@@ -65,12 +92,27 @@ export function ContactClient() {
     }
 
     setSubmitting(true);
-    // Simulate sending — replace with your preferred service (EmailJS, Resend, etc.)
-    await new Promise((r) => setTimeout(r, 1200));
-    setSubmitting(false);
-    setSubmitted(true);
-    toast.success("Message sent! I'll get back to you soon.");
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    try {
+      await emailjs.send(
+        process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!,
+        process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID!,
+        {
+          name: formData.name,
+          email: formData.email,
+          number: formData.number,
+          title: formData.subject,
+          message: formData.message,
+        },
+        process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!
+      );
+      setSubmitted(true);
+      toast.success("Message sent! I'll get back to you soon.");
+      setFormData({ name: "", email: "", number: "", subject: "", message: "" });
+    } catch {
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -140,7 +182,7 @@ export function ContactClient() {
                     href={personalInfo.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="h-9 w-9 rounded-lg border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-indigo-500 hover:border-indigo-500/40 transition-colors"
+                    className="h-9 w-9 rounded-lg border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-indigo-500 hover:border-indigo-500/40 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110"
                     aria-label="LinkedIn"
                   >
                     <Linkedin className="h-4 w-4" />
@@ -149,7 +191,7 @@ export function ContactClient() {
                     href={personalInfo.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="h-9 w-9 rounded-lg border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-indigo-500 hover:border-indigo-500/40 transition-colors"
+                    className="h-9 w-9 rounded-lg border border-border bg-background flex items-center justify-center text-muted-foreground hover:text-indigo-500 hover:border-indigo-500/40 transition-all duration-200 hover:-translate-y-0.5 hover:scale-110"
                     aria-label="GitHub"
                   >
                     <Github className="h-4 w-4" />
@@ -215,6 +257,20 @@ export function ContactClient() {
                         required
                       />
                     </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label htmlFor="number" className="text-sm font-medium text-foreground">
+                      Phone Number
+                    </label>
+                    <Input
+                      id="number"
+                      name="number"
+                      type="tel"
+                      placeholder="+91 00000 00000"
+                      value={formData.number}
+                      onChange={handleChange}
+                    />
                   </div>
 
                   <div className="space-y-1.5">
